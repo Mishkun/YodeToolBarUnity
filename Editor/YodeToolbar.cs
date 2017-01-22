@@ -49,14 +49,39 @@ public class YodeToolbar : EditorWindow
 
         GUILayout.BeginVertical();
         GUILayout.FlexibleSpace();
+        var triGuiContent = new GUIContent(string.Format("Tris: {0}", GetTrisCount()),
+            EditorGUIUtility.Load("Assets/YodeToolBar/Icons/Tris.png") as Texture2D,
+            "Number of triangles in selected object");
+        GUILayout.Label(triGuiContent, GUILayout.Height(16));
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
+
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
         var vertGuiContent = new GUIContent(string.Format("Verts: {0}", GetVertsCount()),
             EditorGUIUtility.Load("Assets/YodeToolBar/Icons/Vertices.png") as Texture2D,
             "Number of vertices in selected object");
         GUILayout.Label(vertGuiContent,GUILayout.Height(16));
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
+
+
         GUILayout.Space(10);
         GUILayout.EndHorizontal();
+    }
+
+    private string GetTrisCount()
+    {
+
+        if (Selection.activeGameObject != null)
+        {
+            var meshFilter = Selection.activeGameObject.GetComponent<MeshFilter>();
+            if (meshFilter != null)
+            {
+                return string.Format("{0}", meshFilter.sharedMesh.triangles.Length);
+            }
+        }
+        return "N/A";
     }
 
     private string GetVertsCount()
