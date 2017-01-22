@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -34,17 +35,42 @@ public class YodeToolbar : EditorWindow
             MakeParent();
         }
         //GUILayout.Space(5);
-        if (
-            GUILayout.Button(new GUIContent(
-                EditorGUIUtility.Load("Assets/YodeToolBar/Icons/Deselect.png") as Texture2D,
-                "Deselect All"), GUILayout.Height(28), GUILayout.Width(32)))
+        var deselectGuiContent = new GUIContent(
+            EditorGUIUtility.Load("Assets/YodeToolBar/Icons/Deselect.png") as Texture2D,
+            "Deselect All");
+        if (GUILayout.Button(deselectGuiContent,
+            GUILayout.Height(28),
+            GUILayout.Width(32)))
         {
             DeselectAll();
         }
-        //pressed = (GUILayout.Toggle(pressed, "ToogleMe", "button",GUILayout.Height(30)));
 
         GUILayout.FlexibleSpace();
+
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        var vertGuiContent = new GUIContent(string.Format("Verts: {0}", GetVertsCount()),
+            EditorGUIUtility.Load("Assets/YodeToolBar/Icons/Vertices.png") as Texture2D,
+            "Number of vertices in selected object");
+        GUILayout.Label(vertGuiContent,GUILayout.Height(16));
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
+        GUILayout.Space(10);
         GUILayout.EndHorizontal();
+    }
+
+    private string GetVertsCount()
+    {
+
+        if (Selection.activeGameObject != null)
+        {
+            var meshFilter = Selection.activeGameObject.GetComponent<MeshFilter>();
+            if (meshFilter != null)
+            {
+                return string.Format("{0}", meshFilter.sharedMesh.vertexCount);
+            }
+        }
+        return "N/A";
     }
 
     [MenuItem("GameObject/Deselect All &f", true, 1000)]
@@ -63,7 +89,7 @@ public class YodeToolbar : EditorWindow
     public static void MakeParent()
     {
         var gameobjects = Selection.gameObjects;
-        var newParent = new GameObject("GameObject1");
+        var newParent = new GameObject("GameObject");
         Undo.RegisterCreatedObjectUndo(newParent, "Created parent");
 
         //  Select the topmost transform and copy parent value
