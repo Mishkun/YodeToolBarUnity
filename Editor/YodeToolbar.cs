@@ -11,7 +11,7 @@ public class YodeToolbar : EditorWindow
     [MenuItem("Window/YodeToolBar")]
     public static void ShowMyAwesomeExtention()
     {
-        var window = GetWindow<YodeToolbar>();
+        GetWindow<YodeToolbar>();
     }
 
     private void OnEnable()
@@ -33,11 +33,30 @@ public class YodeToolbar : EditorWindow
         {
             MakeParent();
         }
-
+        //GUILayout.Space(5);
+        if (
+            GUILayout.Button(new GUIContent(
+                EditorGUIUtility.Load("Assets/YodeToolBar/Icons/Deselect.png") as Texture2D,
+                "Deselect All"), GUILayout.Height(28), GUILayout.Width(32)))
+        {
+            DeselectAll();
+        }
         //pressed = (GUILayout.Toggle(pressed, "ToogleMe", "button",GUILayout.Height(30)));
 
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+    }
+
+    [MenuItem("GameObject/Deselect All &f", true, 1000)]
+    private static bool ValidateDeselectAll()
+    {
+        return Selection.activeGameObject != null;
+    }
+
+    [MenuItem("GameObject/Deselect All &f", false, 1000)]
+    private static void DeselectAll()
+    {
+        Selection.activeGameObject = null;
     }
 
     //[MenuItem("GameObject/Create Empty Parent", false, 0)]
